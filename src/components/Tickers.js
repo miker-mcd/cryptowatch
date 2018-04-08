@@ -1,6 +1,7 @@
 // Import React and Component from react to use them and import CSS file so styles are applied
 import React, { Component } from 'react';
 import Cryptocurrency from './Cryptocurrency';
+import axios from 'axios';
 import './Tickers.css';
 
 class Tickers extends Component {
@@ -37,6 +38,17 @@ class Tickers extends Component {
         }
       ]
     };
+  }
+
+  fetchCryptocurrencyData() {
+    axios
+      .get('https://api.coinmarketcap.com/v1/ticker/?limit=10')
+      .then(response => {
+        var wanted = ['bitcoin', 'ethereum', 'litecoin'];
+        var result = response.data.filter(currency => wanted.includes(currency.id));
+        this.setState({ data: result });
+      })
+      .catch(err => console.log(err));
   }
 
   render() {
